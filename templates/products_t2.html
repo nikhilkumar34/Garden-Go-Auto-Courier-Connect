@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Garden Go | Products</title>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('customer.show_products') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('customer.history') }}">Order History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('customer.view_cart') }}">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('customer.cust_profile') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('customer.contact') }}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('authenticate.logout') }}">Logout</a>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="search-filter-bar">
+    <form method="GET" action="{{ url_for('customer.show_products') }}" class="filter-form">
+        <input type="text" name="search" placeholder="Search by product name" value="{{ request.args.get('search', '') }}" class="search-input">
+        
+        <select name="category" class="filter-dropdown">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+            <option value="{{ category[0] }}" {% if request.args.get('category') == category[0] %}selected{% endif %}>
+                {{ category[0] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="sort" class="sort-dropdown">
+            <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>Sort by Name</option>
+            <option value="price" {% if request.args.get('sort') == 'price' %}selected{% endif %}>Sort by Price</option>
+            <option value="weight" {% if request.args.get('sort') == 'weight' %}selected{% endif %}>Sort by Weight</option>
+        </select>
+
+        <button type="submit" class="filter-btn">Apply</button>
+    </form>
+</div>
+
+<div class="product-wrapper">
+    <div class="product-page">
+        <h1 class="page-title">Explore our Products</h1>
+
+        <!-- Flash Messages -->
+        <!-- <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div> -->
+        {% include 'product_grid_t2.html' %}
+  
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+{% endblock %}
